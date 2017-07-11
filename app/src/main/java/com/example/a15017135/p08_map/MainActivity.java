@@ -1,6 +1,8 @@
 package com.example.a15017135.p08_map;
 
+import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.PermissionChecker;
@@ -9,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -21,6 +24,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static com.google.android.gms.maps.model.BitmapDescriptorFactory.fromResource;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
         mapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
-            public void onMapReady(GoogleMap googleMap) {
+            public void onMapReady(final GoogleMap googleMap) {
                 map = googleMap;
                 LatLng singapore = new LatLng(1.382287, 103.796140);
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(singapore,
@@ -62,13 +66,19 @@ public class MainActivity extends AppCompatActivity {
                     Log.e("GMap - Permission", "GPS access has not been granted");
                 }
 
+                int height = 120;
+                int width = 120;
+                BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.markerstar);
+                Bitmap b=bitmapdraw.getBitmap();
+                Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
+
                 final LatLng north = new LatLng(1.44224, 103.785733);
                 final Marker northmarker = map.addMarker(new
                         MarkerOptions()
                         .position(north)
                         .title("HQ-North")
                         .snippet("Block 333, Admiralty Ave 3, 765654 Operating hours: 10am-5pm  Tel:65433456")
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
+                        .icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
 
                 final LatLng central = new LatLng(1.337668, 103.805066);
                 Marker centralmarker = map.addMarker(new
@@ -90,10 +100,10 @@ public class MainActivity extends AppCompatActivity {
                 btn1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (map != null){
+                        if (map != null) {
                             map.moveCamera(CameraUpdateFactory.newLatLng(north));
                             map.animateCamera(CameraUpdateFactory.zoomIn());
-                            map.animateCamera(CameraUpdateFactory.zoomTo(15),1000,null);
+                            map.animateCamera(CameraUpdateFactory.zoomTo(15), 1000, null);
                         }
                     }
 
@@ -102,10 +112,10 @@ public class MainActivity extends AppCompatActivity {
                 btn2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (map != null){
+                        if (map != null) {
                             map.moveCamera(CameraUpdateFactory.newLatLng(central));
                             map.animateCamera(CameraUpdateFactory.zoomIn());
-                            map.animateCamera(CameraUpdateFactory.zoomTo(15),1000,null);
+                            map.animateCamera(CameraUpdateFactory.zoomTo(15), 1000, null);
                         }
                     }
 
@@ -114,18 +124,26 @@ public class MainActivity extends AppCompatActivity {
                 btn3.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (map != null){
+                        if (map != null) {
                             map.moveCamera(CameraUpdateFactory.newLatLng(east));
                             map.animateCamera(CameraUpdateFactory.zoomIn());
-                            map.animateCamera(CameraUpdateFactory.zoomTo(15),1000,null);
+                            map.animateCamera(CameraUpdateFactory.zoomTo(15), 1000, null);
                         }
                     }
 
                 });
+                map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                    @Override
+                    public boolean onMarkerClick(Marker marker) {
+                        Toast toast = Toast.makeText(getBaseContext(),marker.getTitle(),Toast.LENGTH_SHORT);
+                        toast.show();
+                        return false;
+
+                    }
+                });
+
             }
-
         });
-
     }
 }
 
