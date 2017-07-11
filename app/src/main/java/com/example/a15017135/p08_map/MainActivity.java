@@ -10,7 +10,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Adapter;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -23,13 +27,19 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static com.example.a15017135.p08_map.R.id.parent;
 import static com.google.android.gms.maps.model.BitmapDescriptorFactory.fromResource;
 
 public class MainActivity extends AppCompatActivity {
 
     Button btn1, btn2, btn3;
+//    Spinner spn;
     private GoogleMap map;
+//    List<String> locationlist = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +49,15 @@ public class MainActivity extends AppCompatActivity {
         btn1 = (Button) findViewById(R.id.btn1);
         btn2 = (Button) findViewById(R.id.btn2);
         btn3 = (Button) findViewById(R.id.btn3);
+        //spinner
+//        spn = (Spinner)findViewById(R.id.spn);
+//        locationlist.add("HQ-North");
+//        locationlist.add("Central");
+//        locationlist.add("East");
+//
+//        final ArrayAdapter<String> locationAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,locationlist);
+//        spn.setAdapter(locationAdapter);
+//
 
         FragmentManager fm = getSupportFragmentManager();
         SupportMapFragment mapFragment = (SupportMapFragment)
@@ -54,11 +73,12 @@ public class MainActivity extends AppCompatActivity {
 
                 UiSettings uicompass = map.getUiSettings();
                 uicompass.setCompassEnabled(true);
+                int permissionCheck = ContextCompat.checkSelfPermission(MainActivity.this,
+                        ACCESS_FINE_LOCATION);
 
                 UiSettings uizoom = map.getUiSettings();
                 uizoom.setZoomControlsEnabled(true);
-                int permissionCheck = ContextCompat.checkSelfPermission(MainActivity.this,
-                        ACCESS_FINE_LOCATION);
+
 
                 if (permissionCheck == PermissionChecker.PERMISSION_GRANTED) {
                     map.setMyLocationEnabled(true);
@@ -84,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
                 Marker centralmarker = map.addMarker(new
                         MarkerOptions()
                         .position(central)
-                        .title("HQ-Central")
+                        .title("Central")
                         .snippet("Block 3A, Orchard Ave 3, 134542 Operating hours: 11am-8pm   Tel:67788652")
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
 
@@ -92,11 +112,31 @@ public class MainActivity extends AppCompatActivity {
                 Marker eastmarker = map.addMarker(new
                         MarkerOptions()
                         .position(east)
-                        .title("HQ-East")
+                        .title("East")
                         .snippet("Block 555, Tampines Ave 3, 287788 Operating hours: 9am-5pm Tel:66776677")
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
 
 
+//                //using spinner
+//                spn.setOnItemSelectedListener(locationAdapter,View view,int pos,long id){
+//                    while(map != null){
+//                        if(pos == 0){
+//                            map.moveCamera(CameraUpdateFactory.newLatLng(north));
+//                         map.animateCamera(CameraUpdateFactory.zoomIn());
+//                           map.animateCamera(CameraUpdateFactory.zoomTo(15), 1000, null);
+//                        }else if(pos == 1){
+//                            map.moveCamera(CameraUpdateFactory.newLatLng(central));
+//                        map.animateCamera(CameraUpdateFactory.zoomIn());
+//                       map.animateCamera(CameraUpdateFactory.zoomTo(15), 1000, null);
+//                        }else{
+//                            map.moveCamera(CameraUpdateFactory.newLatLng(east));
+//                            map.animateCamera(CameraUpdateFactory.zoomIn());
+//                            map.animateCamera(CameraUpdateFactory.zoomTo(15), 1000, null);
+//                        }
+//                }
+//                };
+
+//using button
                 btn1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
